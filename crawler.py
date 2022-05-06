@@ -132,8 +132,8 @@ if __name__ == '__main__':
     Wheels = Crawler("roti-jante-anvelope/", "jante-si-roti/", session, "[Rr]?[ .\/,-]*?16", "[Rr]?[ .\/,-]*?17", "[Rr]?[ .\/,-]*?18", "[Rr]?[ .\/,-]*?19", "[Rr]?[ .\/,-]*?20", "[Rr]?[ .\/,-]*?21")
     Body = Crawler("caroserie-interior/", "caroserie-oglinzi-si-faruri/", session, "(far(uri)?)?", "(aripa?i?e?)", "(bar[ai])[ ,.\/-]*?(spate)", "(bar[ai]*)[ ,.\/-]*?(fata)", "(ha[iye]*on)", "(oglin((zi)|(d)))")
     Interior_Parts = Crawler("caroserie-interior/", "interior/", session, "(nav[iy]*gat[iy]*e)", "(nuca)[ .,\/-]*(de)?[ .,\/-]*(schimbator)[ .,\/-]*(de)?[ .,\/-]*(vitez[ea])", "(hus[ae])", "(volan)", "(boxa)")
-    Electronics = Crawler("mecanica-electrica/", "audio-si-electronice/", session, "(senzori?)[ ]*(parcare)", "((calculator)|(computer))[ ]*(de)?[ ]*(bord)", "(camer[aă])[ ]*(video)?((spate)|(auto)|(360)|(marsalier)|(masalier)|(marsarier))", "(ceas(uri)?)[ ]*(de)?[ ]*(bord)")
-    Brakes = Crawler("mecanica-electrica/", "frane/", session, "(\b)(((discuri) |(disc))(.*)fr[âa]n[ae])(\b)", "(\b)(etrier[ie]?)(\b)", "(\b)(pompa)(.*)fran[ae](\b)", "(\b)((butuci?)(.*)fran[ae])(\b)", "(\b)placu(t)|[ae][ ]*(de)?[ ]*fran[ae](\b)")
+    Electronics = Crawler("mecanica-electrica/", "audio-si-electronice/", session, "(senzori?)[ ]*(parcare)", "((calculator)|(computer))[ ]*(de)?[ ]*(bord)", "(camera)[ ]*(video)?((spate)|(auto)|(360)|(marsalier)|(masalier)|(marsarier))", "(ceas(uri)?)[ ]*(de)?[ ]*(bord)")
+    Brakes = Crawler("mecanica-electrica/", "frane/", session, "(\b)(((discuri) |(disc))(.*)fran[ae])(\b)", "(\b)(etrier[ie]?)(\b)", "(\b)(pompa)(.*)fran[ae](\b)", "(\b)((butuci?)(.*)fran[ae])(\b)", "(\b)placu(t)|[ae][ ]*(de)?[ ]*fran[ae](\b)")
     Engine = Crawler("mecanica-electrica/", "motor-racire-si-evacuare/", session, "(turbina)", "(\b)((injector)|(injectoare))(\b)", "(\b)volant[ae](\b)", "(\b)((ambreiaje?)|((ambreaj(e)|(uri))(\b)")
     Car = Crawler("vehicule-pentru-dezmembrare/", "", session)
     
