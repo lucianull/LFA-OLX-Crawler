@@ -22,7 +22,7 @@ class Crawler:
         self.new = 0
         self.old = 0
         self.pagesFound.append(0)
-        self.root_link = root_link + sub_link + specialization # https://www.olx.ro/d/piese-auto/   +   roti-jante-anvelope   +   anvelope/
+        self.root_link = root_link + sub_link + specialization
         self.session = requests.Session()
         self.page = 1
         self.Hashes = set()
@@ -111,7 +111,7 @@ class Crawler:
         pageNumberText = '?page='
         link = self.root_link + pageNumberText + str(self.page)
         while True:
-            print(link)
+            # print(link)
             try:
                 pageText = self.session.get(link).text
                 soup = BeautifulSoup(pageText, 'html.parser')
