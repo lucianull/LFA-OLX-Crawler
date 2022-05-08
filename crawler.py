@@ -117,7 +117,7 @@ class Crawler:
         pageNumberText = '?page='
         link = self.root_link + pageNumberText + str(self.page)
         while self.page <= 25:
-            print(link)
+            # print(link)
             try:
                 pageText = self.session.get(link)
                 # print(pageText.status_code)
