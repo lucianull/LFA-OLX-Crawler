@@ -8,7 +8,7 @@ from concurrent.futures import ThreadPoolExecutor
 import threading
 
 class Crawler:
-    def __init__(self, sub_link, specialization, session, *args) -> None:
+    def __init__(self, sub_link, specialization, *args) -> None:
         root_link = "https://www.olx.ro/d/piese-auto/"
         self.reCodes = [x for x in args]
         self.regexCodes = []
@@ -62,7 +62,7 @@ class Crawler:
         for pattern in self.regexCodes:
             result = re.search(pattern, text_variable, re.IGNORECASE)
             if result:
-                self.pagesFound[i] += 1
+                self.brandFound[i] += 1
                 pattern_found = 1
             i += 1
         if pattern_found == 0:
@@ -85,7 +85,10 @@ class Crawler:
                 return
             else:
                 self.Hashes.add(hash_code)
-            advertisment_page = self.session.get(anchor).text
+            advertisment_page = self.session.get(anchor)
+            # while advertisment_page.status_code != 200:
+            #     advertisment_page = self.session.get(anchor)
+            advertisment_page = advertisment_page.text
             advertisment_soup = BeautifulSoup(advertisment_page, 'html.parser')
             advertisment_description = advertisment_soup.find('div', class_='css-g5mtbi-Text').text                
         else:
@@ -94,7 +97,10 @@ class Crawler:
                 return
             else:
                 self.Hashes.add(hash_code)
-            advertisment_page = self.session.get(anchor).text
+            advertisment_page = self.session.get(anchor)
+            # while advertisment_page.status_code != 200:
+            #     advertisment_page = self.session.get(anchor)
+            advertisment_page = advertisment_page.text
             advertisment_soup = BeautifulSoup(advertisment_page, 'html.parser')
             advertisment_description = advertisment_soup.find('div', class_='offer-description__description').text
         title = unicodedata.normalize('NFD', title)
@@ -110,10 +116,14 @@ class Crawler:
     def StartCrawler(self):
         pageNumberText = '?page='
         link = self.root_link + pageNumberText + str(self.page)
-        while True:
-            # print(link)
+        while self.page <= 25:
+            print(link)
             try:
-                pageText = self.session.get(link).text
+                pageText = self.session.get(link)
+                # print(pageText.status_code)
+                # while pageText.status_code != 200:
+                #     pageText = self.session.get(link)
+                pageText = pageText.text
                 soup = BeautifulSoup(pageText, 'html.parser')
                 advertisments = soup.find_all("div", class_="css-19ucd76")
                 with ThreadPoolExecutor(max_workers=45) as executor:
@@ -127,15 +137,14 @@ class Crawler:
 
 
 if __name__ == '__main__':
-    session = requests.Session()
-    Tires = Crawler("roti-jante-anvelope/", "anvelope/", session, "215[ .,\/-]*?65[ .,/\/-]*?[Rr]?[ .,\/-]*17", "235[ .,\/-]*?55[ .,/\/-]*?[Rr]?[ .,\/-]*19", "245[ .,\/-]*?45[ .,/\/-]*?[Rr]?[ .,\/-]*17")
-    Wheels = Crawler("roti-jante-anvelope/", "jante-si-roti/", session, "[Rr]?[ .\/,-]*?16", "[Rr]?[ .\/,-]*?17", "[Rr]?[ .\/,-]*?18", "[Rr]?[ .\/,-]*?19", "[Rr]?[ .\/,-]*?20", "[Rr]?[ .\/,-]*?21")
-    Body = Crawler("caroserie-interior/", "caroserie-oglinzi-si-faruri/", session, "(far(uri)?)?", "(aripa?i?e?)", "(bar[ai])[ ,.\/-]*?(spate)", "(bar[ai]*)[ ,.\/-]*?(fata)", "(ha[iye]*on)", "(oglin((zi)|(d)))")
-    Interior_Parts = Crawler("caroserie-interior/", "interior/", session, "(nav[iy]*gat[iy]*e)", "(nuca)[ .,\/-]*(de)?[ .,\/-]*(schimbator)[ .,\/-]*(de)?[ .,\/-]*(vitez[ea])", "(hus[ae])", "(volan)", "(boxa)")
-    Electronics = Crawler("mecanica-electrica/", "audio-si-electronice/", session, "(senzori?)[ ]*(parcare)", "((calculator)|(computer))[ ]*(de)?[ ]*(bord)", "(camera)[ ]*(video)?((spate)|(auto)|(360)|(marsalier)|(masalier)|(marsarier))", "(ceas(uri)?)[ ]*(de)?[ ]*(bord)")
-    Brakes = Crawler("mecanica-electrica/", "frane/", session, "(\b)(((discuri) |(disc))(.*)fran[ae])(\b)", "(\b)(etrier[ie]?)(\b)", "(\b)(pompa)(.*)fran[ae](\b)", "(\b)((butuci?)(.*)fran[ae])(\b)", "(\b)placu(t)|[ae][ ]*(de)?[ ]*fran[ae](\b)")
-    Engine = Crawler("mecanica-electrica/", "motor-racire-si-evacuare/", session, "(turbina)", "(\b)((injector)|(injectoare))(\b)", "(\b)volant[ae](\b)", "(\b)((ambreiaje?)|((ambreaj(e)|(uri))(\b)")
-    Car = Crawler("vehicule-pentru-dezmembrare/", "", session)
+    Tires = Crawler("roti-jante-anvelope/", "anvelope/", "215[ .,\/-]*?65[ .,/\/-]*?[Rr]?[ .,\/-]*17", "235[ .,\/-]*?55[ .,/\/-]*?[Rr]?[ .,\/-]*19", "245[ .,\/-]*?45[ .,/\/-]*?[Rr]?[ .,\/-]*17")
+    Wheels = Crawler("roti-jante-anvelope/", "jante-si-roti/", "[Rr]?[ .\/,-]*?16", "[Rr]?[ .\/,-]*?17", "[Rr]?[ .\/,-]*?18", "[Rr]?[ .\/,-]*?19", "[Rr]?[ .\/,-]*?20", "[Rr]?[ .\/,-]*?21")
+    Body = Crawler("caroserie-interior/", "caroserie-oglinzi-si-faruri/", "(far(uri)?)?", "(aripa?i?e?)", "(bar[ai])[ ,.\/-]*?(spate)", "(bar[ai]*)[ ,.\/-]*?(fata)", "(ha[iye]*on)", "(oglin((zi)|(d)))")
+    Interior_Parts = Crawler("caroserie-interior/", "interior/", "(nav[iy]*gat[iy]*e)", "(nuca)[ .,\/-]*(de)?[ .,\/-]*(schimbator)[ .,\/-]*(de)?[ .,\/-]*(vitez[ea])", "(hus[ae])", "(volan)", "(boxa)")
+    Electronics = Crawler("mecanica-electrica/", "audio-si-electronice/", "(senzori?)[ ]*(parcare)", "((calculator)|(computer))[ ]*(de)?[ ]*(bord)", "(camera)[ ]*(video)?((spate)|(auto)|(360)|(marsalier)|(masalier)|(marsarier))", "(ceas(uri)?)[ ]*(de)?[ ]*(bord)")
+    Brakes = Crawler("mecanica-electrica/", "frane/", "(\b)(((discuri) |(disc))(.*)fran[ae])(\b)", "(\b)(etrier[ie]?)(\b)", "(\b)(pompa)(.*)fran[ae](\b)", "(\b)((butuci?)(.*)fran[ae])(\b)", "(\b)placu(t)|[ae][ ]*(de)?[ ]*fran[ae](\b)")
+    Engine = Crawler("mecanica-electrica/", "motor-racire-si-evacuare/", "(turbina)", "((injector)|(injectoare))", "volant[ae]", "(am[bp]rei?aj(e|(uri))?)")
+    Car = Crawler("vehicule-pentru-dezmembrare/", "")
     
     thread1 = threading.Thread(target=Tires.StartCrawler)
     thread2 = threading.Thread(target=Wheels.StartCrawler)
@@ -214,7 +223,7 @@ if __name__ == '__main__':
     print(f"\t\tPompa frana {Brakes.pagesFound[2]}")
     print(f"\t\tButuc {Brakes.pagesFound[3]}")
     print(f"\t\tPlacute frana {Brakes.pagesFound[4]}")
-    print(f"\t\tAltele{Brakes.pagesFound[5]}")
+    print(f"\t\tAltele {Brakes.pagesFound[5]}")
     print("\tPiese motor/transmisie:")
     print(f"\t\tTurbina {Engine.pagesFound[0]}")
     print(f"\t\tInjectoare {Engine.pagesFound[1]}")
